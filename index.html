@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roblox Auto Login</title>
+</head>
+<body style="background: #1a1a2e; color: white; padding: 50px; text-align: center;">
+    <h1 style="color: #00ff88;">🎮 Roblox Auto-Login</h1>
+    
+    <div id="cookieInput" style="margin: 30px 0;">
+        <h3>Schritt 1: Cookie einfügen</h3>
+        <textarea id="cookieField" 
+                  placeholder="Füge hier deinen .ROBLOSECURITY Cookie ein..." 
+                  style="width: 80%; height: 100px; padding: 10px; font-family: monospace;"></textarea>
+        <br><br>
+        <button onclick="setCookie()" style="background: #00ff88; color: black; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer;">
+            🔐 Cookie setzen & Login starten
+        </button>
+    </div>
+    
+    <div id="loading" style="display: none;">
+        <h2>⏳ Bitte warten...</h2>
+        <div style="border: 3px solid #00ff88; width: 300px; height: 20px; margin: 20px auto;">
+            <div id="progressBar" style="background: #00ff88; height: 100%; width: 0%;"></div>
+        </div>
+        <p id="status">Cookie wird gesetzt...</p>
+    </div>
+
+    <script>
+    function setCookie() {
+        // Cookie aus Textfeld holen
+        let cookieInput = document.getElementById('cookieField').value.trim();
+        
+        if (!cookieInput) {
+            alert("Bitte Cookie einfügen!");
+            return;
+        }
+        
+        // Cookie formatieren
+        let cookie = cookieInput;
+        if (cookie.startsWith('_|WARNING')) {
+            cookie = '.ROBLOSECURITY=' + cookie;
+        }
+        
+        // UI wechseln
+        document.getElementById('cookieInput').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+        
+        // Cookie setzen
+        document.cookie = cookie + "; path=/; domain=.roblox.com; Secure; SameSite=None";
+        
+        // Fortschrittsanimation
+        let progress = 0;
+        let status = document.getElementById('status');
+        let progressBar = document.getElementById('progressBar');
+        
+        let steps = [
+            "Cookie wird gesetzt...",
+            "Sitzung wird erstellt...",
+            "Prüfe Login...",
+            "Weiterleitung vorbereiten..."
+        ];
+        
+        let stepIndex = 0;
+        let interval = setInterval(function() {
+            progress += 25;
+            progressBar.style.width = progress + '%';
+            
+            if (stepIndex < steps.length) {
+                status.textContent = "✅ " + steps[stepIndex];
+                stepIndex++;
+            }
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                status.textContent = "✅ Fertig! Weiterleitung...";
+                
+                // Weiterleitung zu Roblox
+                setTimeout(function() {
+                    window.location.href = "https://www.roblox.com/home";
+                }, 1000);
+            }
+        }, 500);
+    }
+    </script>
+
+    <div style="margin-top: 50px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+        <h3>❓ Wie bekomme ich meinen Cookie?</h3>
+        <ol style="text-align: left; max-width: 600px; margin: 0 auto;">
+            <li>Gehe auf <a href="https://roblox.com" style="color: #00ff88;" target="_blank">roblox.com</a></li>
+            <li>Logge dich normal ein</li>
+            <li>Drücke <strong>F12</strong> auf deiner Tastatur</li>
+            <li>Gehe zu <strong>Application</strong> oder <strong>Storage</strong> → <strong>Cookies</strong></li>
+            <li>Wähle <strong>https://www.roblox.com</strong></li>
+            <li>Finde <strong>.ROBLOSECURITY</strong> und kopiere den gesamten Wert</li>
+            <li>Füge ihn oben ein</li>
+        </ol>
+        <p style="color: #ff5555; margin-top: 20px;">
+            ⚠️ <strong>WARNUNG:</strong> Cookie niemals mit anderen teilen!<br>
+            Das würde ihnen Zugang zu deinem Account geben.
+        </p>
+    </div>
+</body>
+</html>
